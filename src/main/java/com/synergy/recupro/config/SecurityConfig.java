@@ -42,6 +42,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
          "/v2/api-docs",
          "/webjars/**"
  };
+ 
+
+
 
 	@Bean
 	public JwtAuthenticationFilter jwtAuthenticationFilter() {
