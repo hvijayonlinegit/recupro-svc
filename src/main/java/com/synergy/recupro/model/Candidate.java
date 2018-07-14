@@ -75,7 +75,8 @@ public class Candidate extends AuditModel {
     private String primaryskills;
     @Column(columnDefinition = "text")
     private String secondaryskills;
-    
+    @Column(columnDefinition = "text")
+    private String docsuploaded;
     
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
@@ -261,6 +262,14 @@ public class Candidate extends AuditModel {
 
 	public void setSecondaryskills(String secondaryskills) {
 		this.secondaryskills = secondaryskills;
+	}
+
+	public String getDocsuploaded() {
+		return docsuploaded;
+	}
+
+	public void setDocsuploaded(String docsuploaded) {
+		this.docsuploaded = docsuploaded;
 	}
 
 	public List<Requirements> getRequirements() {

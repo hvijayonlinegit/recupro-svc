@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.synergy.recupro.service;
 
@@ -60,9 +60,9 @@ public class Aws3ServiceImpl implements IAws3Service {
 		return putObjectResult;
 	}
 
-	
-	
-	 
+
+
+
 	public List<PutObjectResult> upload(MultipartFile[] multipartFiles, int id) {
 
 		List<PutObjectResult> putObjectResults = new ArrayList<>();
@@ -91,8 +91,8 @@ public class Aws3ServiceImpl implements IAws3Service {
 		return putObjectResults;
 	}
 
-	
-	 
+
+
 	public List<S3ObjectSummary> list() {
 		ObjectListing objectListing = amazonS3
 				.listObjects(new ListObjectsRequest().withBucketName(awsConfig
