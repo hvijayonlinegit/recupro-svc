@@ -9,7 +9,7 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 
 public interface IAws3Service {
 
-	List<PutObjectResult> upload(MultipartFile[] multipartFiles,int id);
+	List<PutObjectResult> upload(MultipartFile[] multipartFiles,Long id);
 
 	List<S3ObjectSummary> list();
 

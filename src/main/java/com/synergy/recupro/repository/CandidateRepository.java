@@ -11,4 +11,5 @@ import com.synergy.recupro.model.Candidate;
 @Repository
 public interface CandidateRepository extends JpaRepository<Candidate, Long> {
 	List<Candidate> findByRequirementsId(Long req_id);
+	Candidate findByCandidateId(Long id);
 }

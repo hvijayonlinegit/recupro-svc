@@ -26,6 +26,8 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.synergy.recupro.config.AwsConfig;
 import com.synergy.recupro.exception.AppException;
+import com.synergy.recupro.model.Document;
+import com.synergy.recupro.repository.DocumentRepository;
 import com.synergy.recupro.service.Aws3ServiceImpl;
 
 /**
@@ -47,12 +49,15 @@ public class DocumentController {
 	@Autowired
 	ResourceLoader resourceLoader;
 
+	@Autowired
+	DocumentRepository documentRepository;
+
 	String message = "";
 
 	@PostMapping(value = "/upload")
 	public ResponseEntity<String> upload(
 			@RequestParam("file") MultipartFile[] multipartFiles,
-			@RequestParam("id") int id) {
+			@RequestParam("id") Long id) {
 		try {
 
 			aws3ServiceImpl.upload(multipartFiles, id);
@@ -68,9 +73,9 @@ public class DocumentController {
 
 	@GetMapping(value = "/download")
 	public ResponseEntity<?> download(@RequestParam String key,
-			@RequestParam("id") int id) {
+			@RequestParam("id") Long id) {
 
-		String folderKey = Integer.toString(id) + "/" + key;
+		String folderKey = Long.toString(id) + "/" + key;
 		/*
 		 * String bucket = "https://s3.amazonaws.com/" + awsConfig.getBucket() +
 		 * folderKey;
@@ -84,13 +89,14 @@ public class DocumentController {
 			S3ObjectInputStream objectInputStream = s3Object.getObjectContent();
 
 			byte[] bytes = IOUtils.toByteArray(objectInputStream);
-
+			/*Document document = documentRepository.findBydocumentType(id,key);
+			String MType = document.getDocumentType();*/
 			String fileName = URLEncoder.encode(key, "UTF-8").replaceAll("\\+",
 					"%20");
 
 			/* Resource s3Resource = resourceLoader.getResource(bucket); */
 			HttpHeaders httpHeaders = new HttpHeaders();
-			httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+			//httpHeaders.setContentType(MediaType.parseMediaType(MType));
 			httpHeaders.setContentDispositionFormData("attachment", fileName);
 			return new ResponseEntity<>(bytes, httpHeaders, HttpStatus.OK);
 

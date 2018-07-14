@@ -16,84 +16,75 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
 @Entity
 @Table(name = "candidate")
 public class Candidate extends AuditModel {
-	
-    /**
+
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id
-    @GeneratedValue(generator = "candidates_generator")
-    @SequenceGenerator(
-            name = "candidates_generator",
-            sequenceName = "candidates_sequence",
-            initialValue = 5000
-    )
-    private Long id;
-    @Column(columnDefinition = "text")
-    private String firstname;
-    @Column(columnDefinition = "text")
-    private String lastname;
-    @Column(columnDefinition = "text")
-    private String phonenumber;
-    @Column(columnDefinition = "text")
-    private String emailaddress;
-    @Column(columnDefinition = "text")
-    private String overallexperience;
-    @Column(columnDefinition = "text")
-    private String relevantexperience;
-    @Column(columnDefinition = "text")
-    private String workingstatus;
-    @Column(columnDefinition = "text")
-    private String strengths;
-    @Column(columnDefinition = "text")
-    private String avaiabilityforinterview;
-    @Column(columnDefinition = "text")
-    private String availabilitytojoin;
-    @Column(columnDefinition = "text")
-    private String status;
-    @Column(columnDefinition = "text")
-    private String reason;
-    @Column(columnDefinition = "text")
-    private String linkedinurl;
-    @Column(columnDefinition = "text")
-    private String referrences;
-    @Column(columnDefinition = "text")
-    private String vendorname;
-    @Column(columnDefinition = "text")
-    private String vendorcontact;
-    @Column(columnDefinition = "text")
-    private String vendorphone;
-    @Column(columnDefinition = "text")
-    private String vendoremail;
-    @Column(columnDefinition = "text")
-    private String referredby;
-    @Column(columnDefinition = "text")
-    private String primaryskills;
-    @Column(columnDefinition = "text")
-    private String secondaryskills;
-    @Column(columnDefinition = "text")
-    private String docsuploaded;
-    
-    @ManyToMany(cascade = { CascadeType.ALL })
-    @JoinTable(
-       name = "Candidate_Requirement", 
-       joinColumns = { @JoinColumn(name = "candidate_id") }, 
-        inverseJoinColumns = { @JoinColumn(name = "req_id") }
-    )
-   
-    @JsonIgnoreProperties("candidates")
-    private List<Requirements> requirements = new ArrayList<Requirements>();
+	@GeneratedValue(generator = "candidates_generator")
+	@SequenceGenerator(name = "candidates_generator", sequenceName = "candidates_sequence", initialValue = 1000)
+	@Column(name = "candidateid")
+	private Long candidateId;
+	@Column(columnDefinition = "text")
+	private String firstname;
+	@Column(columnDefinition = "text")
+	private String lastname;
+	@Column(columnDefinition = "text")
+	private String phonenumber;
+	@Column(columnDefinition = "text")
+	private String emailaddress;
+	@Column(columnDefinition = "text")
+	private String overallexperience;
+	@Column(columnDefinition = "text")
+	private String relevantexperience;
+	@Column(columnDefinition = "text")
+	private String workingstatus;
+	@Column(columnDefinition = "text")
+	private String strengths;
+	@Column(columnDefinition = "text")
+	private String avaiabilityforinterview;
+	@Column(columnDefinition = "text")
+	private String availabilitytojoin;
+	@Column(columnDefinition = "text")
+	private String status;
+	@Column(columnDefinition = "text")
+	private String reason;
+	@Column(columnDefinition = "text")
+	private String linkedinurl;
+	@Column(columnDefinition = "text")
+	private String referrences;
+	@Column(columnDefinition = "text")
+	private String vendorname;
+	@Column(columnDefinition = "text")
+	private String vendorcontact;
+	@Column(columnDefinition = "text")
+	private String vendorphone;
+	@Column(columnDefinition = "text")
+	private String vendoremail;
+	@Column(columnDefinition = "text")
+	private String referredby;
+	@Column(columnDefinition = "text")
+	private String primaryskills;
+	@Column(columnDefinition = "text")
+	private String secondaryskills;
+	@Column(columnDefinition = "text")
+	private String docsuploaded;
 
-	public Long getId() {
-		return id;
+	@ManyToMany(cascade = { CascadeType.ALL })
+	@JoinTable(name = "Candidate_Requirement", joinColumns = { @JoinColumn(name = "candidate_id") }, inverseJoinColumns = { @JoinColumn(name = "req_id") })
+	@JsonIgnoreProperties("candidates")
+	private List<Requirements> requirements = new ArrayList<Requirements>();
+
+	public Long getCandidateId() {
+		return candidateId;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setCandidateId(Long candidateId) {
+		this.candidateId = candidateId;
 	}
 
 	public String getFirstname() {
@@ -279,5 +270,26 @@ public class Candidate extends AuditModel {
 	public void setRequirements(List<Requirements> requirements) {
 		this.requirements = requirements;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "Candidate [candidateid=" + candidateId + ", firstname="
+				+ firstname + ", lastname=" + lastname + ", phonenumber="
+				+ phonenumber + ", emailaddress=" + emailaddress
+				+ ", overallexperience=" + overallexperience
+				+ ", relevantexperience=" + relevantexperience
+				+ ", workingstatus=" + workingstatus + ", strengths="
+				+ strengths + ", avaiabilityforinterview="
+				+ avaiabilityforinterview + ", availabilitytojoin="
+				+ availabilitytojoin + ", status=" + status + ", reason="
+				+ reason + ", linkedinurl=" + linkedinurl + ", referrences="
+				+ referrences + ", vendorname=" + vendorname
+				+ ", vendorcontact=" + vendorcontact + ", vendorphone="
+				+ vendorphone + ", vendoremail=" + vendoremail
+				+ ", referredby=" + referredby + ", primaryskills="
+				+ primaryskills + ", secondaryskills=" + secondaryskills
+				+ ", docsuploaded=" + docsuploaded + ", requirements="
+				+ requirements + "]";
+	}
+
 }

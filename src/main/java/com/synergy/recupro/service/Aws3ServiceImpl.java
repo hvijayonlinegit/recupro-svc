@@ -1,5 +1,5 @@
 /**
- *
+ * 
  */
 package com.synergy.recupro.service;
 
@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,10 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.synergy.recupro.config.AwsConfig;
+import com.synergy.recupro.exception.AppException;
+import com.synergy.recupro.model.Candidate;
 import com.synergy.recupro.model.Document;
+import com.synergy.recupro.repository.CandidateRepository;
 import com.synergy.recupro.repository.DocumentRepository;
 
 /**
@@ -34,10 +38,10 @@ import com.synergy.recupro.repository.DocumentRepository;
 @Service
 public class Aws3ServiceImpl implements IAws3Service {
 
-
 	@Autowired
 	private AmazonS3 amazonS3;
-
+	@Autowired
+	private CandidateRepository candidateRepository;
 	@Autowired
 	private DocumentRepository documentRepository;
 
@@ -45,8 +49,8 @@ public class Aws3ServiceImpl implements IAws3Service {
 	AwsConfig awsConfig;
 
 	private PutObjectResult upload(InputStream inputStream, String uploadKey,
-			int id) {
-		String folderKey = Integer.toString(id) + "/" + uploadKey;
+			Long id) {
+		String folderKey = Long.toString(id) + "/" + uploadKey;
 		PutObjectRequest putObjectRequest = new PutObjectRequest(
 				awsConfig.getBucket(), folderKey, inputStream,
 				new ObjectMetadata());
@@ -60,10 +64,7 @@ public class Aws3ServiceImpl implements IAws3Service {
 		return putObjectResult;
 	}
 
-
-
-
-	public List<PutObjectResult> upload(MultipartFile[] multipartFiles, int id) {
+	public List<PutObjectResult> upload(MultipartFile[] multipartFiles, Long id) {
 
 		List<PutObjectResult> putObjectResults = new ArrayList<>();
 
@@ -91,8 +92,6 @@ public class Aws3ServiceImpl implements IAws3Service {
 		return putObjectResults;
 	}
 
-
-
 	public List<S3ObjectSummary> list() {
 		ObjectListing objectListing = amazonS3
 				.listObjects(new ListObjectsRequest().withBucketName(awsConfig
@@ -107,13 +106,18 @@ public class Aws3ServiceImpl implements IAws3Service {
 	/**
 	 * Method is use to save metadata of multipart
 	 */
-	public void saveMetaData(MultipartFile file, int id) throws IOException {
+	public void saveMetaData(MultipartFile file, Long id) throws IOException {
 		Document metaData = new Document();
-		metaData.setCandidateId((long)id);
-		metaData.setDocumentName(file.getOriginalFilename());
-		metaData.setDocumentType(file.getContentType());
-		metaData.setDocumentSize(file.getSize());
-		documentRepository.save(metaData);
+		if (id != null) {
+			Candidate candidate = candidateRepository.findByCandidateId(id);
+			metaData.setCandidate(candidate);
+			metaData.setDocumentName(file.getOriginalFilename());
+			metaData.setDocumentType(file.getContentType());
+			metaData.setDocumentSize(file.getSize());
+			documentRepository.save(metaData);
+		} else {
+			throw new AppException("Candidate Id not Found");
+		}
 	}
 
 }
