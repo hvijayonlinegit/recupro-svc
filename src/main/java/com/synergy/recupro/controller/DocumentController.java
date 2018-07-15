@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -56,14 +57,11 @@ public class DocumentController {
 
 	@PostMapping(value = "/upload")
 	public ResponseEntity<String> upload(
-			@RequestParam("file") MultipartFile[] multipartFiles,
+			@RequestPart("file") MultipartFile[] multipartFiles,
 			@RequestParam("id") Long id) {
 		try {
-
 			aws3ServiceImpl.upload(multipartFiles, id);
-
 		} catch (Exception e) {
-
 			throw new AppException("Error while uploading file");
 		}
 		message = "File successfully uploaded !";
@@ -74,12 +72,8 @@ public class DocumentController {
 	@GetMapping(value = "/download")
 	public ResponseEntity<?> download(@RequestParam String key,
 			@RequestParam("id") Long id) {
-
 		String folderKey = Long.toString(id) + "/" + key;
-		/*
-		 * String bucket = "https://s3.amazonaws.com/" + awsConfig.getBucket() +
-		 * folderKey;
-		 */
+
 		try {
 			GetObjectRequest getObjectRequest = new GetObjectRequest(
 					awsConfig.getBucket(), folderKey);
@@ -89,14 +83,12 @@ public class DocumentController {
 			S3ObjectInputStream objectInputStream = s3Object.getObjectContent();
 
 			byte[] bytes = IOUtils.toByteArray(objectInputStream);
-			/*Document document = documentRepository.findBydocumentType(id,key);
-			String MType = document.getDocumentType();*/
+			Document document = documentRepository.findBydocumentType(id, key);
+			String MType = document.getDocumentType();
 			String fileName = URLEncoder.encode(key, "UTF-8").replaceAll("\\+",
 					"%20");
-
-			/* Resource s3Resource = resourceLoader.getResource(bucket); */
 			HttpHeaders httpHeaders = new HttpHeaders();
-			//httpHeaders.setContentType(MediaType.parseMediaType(MType));
+			httpHeaders.setContentType(MediaType.parseMediaType(MType));
 			httpHeaders.setContentDispositionFormData("attachment", fileName);
 			return new ResponseEntity<>(bytes, httpHeaders, HttpStatus.OK);
 
@@ -108,7 +100,6 @@ public class DocumentController {
 
 	@GetMapping(value = "/list")
 	public ResponseEntity<?> list() {
-
 		List<S3ObjectSummary> detailList = aws3ServiceImpl.list();
 		if (detailList.isEmpty()) {
 			throw new AppException("List of Object is empty");

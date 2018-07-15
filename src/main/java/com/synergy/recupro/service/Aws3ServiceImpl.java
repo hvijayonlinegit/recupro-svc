@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,20 +53,14 @@ public class Aws3ServiceImpl implements IAws3Service {
 		PutObjectRequest putObjectRequest = new PutObjectRequest(
 				awsConfig.getBucket(), folderKey, inputStream,
 				new ObjectMetadata());
-
 		putObjectRequest.setCannedAcl(CannedAccessControlList.PublicRead);
-
 		PutObjectResult putObjectResult = amazonS3.putObject(putObjectRequest);
-
 		IOUtils.closeQuietly(inputStream);
-
 		return putObjectResult;
 	}
 
 	public List<PutObjectResult> upload(MultipartFile[] multipartFiles, Long id) {
-
 		List<PutObjectResult> putObjectResults = new ArrayList<>();
-
 		Arrays.stream(multipartFiles)
 				.filter(multipartFile -> !StringUtils.isEmpty(multipartFile
 						.getOriginalFilename()))
@@ -75,10 +68,8 @@ public class Aws3ServiceImpl implements IAws3Service {
 						multipartFile -> {
 							try {
 								putObjectResults.add(
-
 								upload(multipartFile.getInputStream(),
 										multipartFile.getOriginalFilename(), id)
-
 								);
 
 								saveMetaData(multipartFile, id);
@@ -86,7 +77,6 @@ public class Aws3ServiceImpl implements IAws3Service {
 								e.printStackTrace();
 							}
 						}
-
 				);
 
 		return putObjectResults;
@@ -96,10 +86,8 @@ public class Aws3ServiceImpl implements IAws3Service {
 		ObjectListing objectListing = amazonS3
 				.listObjects(new ListObjectsRequest().withBucketName(awsConfig
 						.getBucket()));
-
 		List<S3ObjectSummary> s3ObjectSummaries = objectListing
 				.getObjectSummaries();
-
 		return s3ObjectSummaries;
 	}
 

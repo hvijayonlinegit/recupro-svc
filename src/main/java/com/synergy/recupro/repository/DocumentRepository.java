@@ -11,6 +11,7 @@ import com.synergy.recupro.model.Document;
  */
 
 public interface DocumentRepository extends JpaRepository<Document, Long> {
-/*	@Query("select d from Documents d where d.candidate.candidateId = ?1 and d.documentName= ?2")
-	Document findBydocumentType(Long Id, String docName);*/
+	// @Query("select d from Documents d where d.candidate.candidateId = ?1 and d.documentName= ?2")
+	@Query(value = "select * from Documents where candidateId = ?1 and documentName= ?2", nativeQuery = true)
+	Document findBydocumentType(Long Id, String docName);
 }
