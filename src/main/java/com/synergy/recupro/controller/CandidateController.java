@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,12 +27,14 @@ public class CandidateController {
     @Autowired
     private CandidateRepository candidatesRepository;
     @CrossOrigin(origins = "*")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping("/requirements/{reqId}/candidates")
     public List<Candidate> getCandidatesByRequirementId(@PathVariable Long reqId) {
         return candidatesRepository.findByRequirementsId(reqId);
     }
     @CrossOrigin(origins = "*")
     @PostMapping("/requirements/{reqId}/candidates")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public Candidate addCandidate(@PathVariable Long reqId,
                             @Valid @RequestBody Candidate candidatebody) {
     		//candidatesRepository.deleteAllInBatch();

@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,17 +26,19 @@ public class AccountsController {
     private AccountsRepository AccountsRepository;
     
     @CrossOrigin(origins = "*")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/accounts")
     public List<Accounts> getAccounts() {
         return AccountsRepository.findAll();
     }
 
     @CrossOrigin(origins = "*")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @PostMapping("/accounts")
     public Accounts createAccount(@Valid @RequestBody Accounts accounts) {
         return AccountsRepository.save(accounts);
     }
-
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @PostMapping("/accounts/{accountId}")
     public Accounts updateAccount(@PathVariable Long accountId,
                                    @Valid @RequestBody Accounts accountsRequest) {
@@ -47,7 +50,7 @@ public class AccountsController {
                 }).orElseThrow(() -> new ResourceNotFoundException("Account not found with id " + accountId, null, accountsRequest));
     }
 
-
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/accounts/{accountId}")
     public ResponseEntity<?> deleteAccount(@PathVariable Long accountId) {
         return AccountsRepository.findById(accountId)

@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,60 +24,81 @@ import com.synergy.recupro.repository.RequirementRepository;
 @RestController
 public class RequirementController {
 
-    @Autowired
-    private RequirementRepository requirementRepository;
+	@Autowired
+	private RequirementRepository requirementRepository;
 
-    @Autowired
-    private AccountsRepository accountsRepository;
+	@Autowired
+	private AccountsRepository accountsRepository;
 
-    @CrossOrigin(origins = "*")
-    @GetMapping("/requirements")
-    public List<Requirements> getAccounts() {
-        return requirementRepository.findAll();
-    }
-    
-    @GetMapping("/accounts/{accountsId}/requitements")
-    public List<Requirements> getRquirementsByAccountsId(@PathVariable Long accountsId) {
-        return requirementRepository.findByAccountsId(accountsId);
-    }
-    @CrossOrigin(origins = "*")
-    @PostMapping("/accounts/{accountsId}/requitements")
-    public Requirements addRequirements(@PathVariable Long accountsId,
-                            @Valid @RequestBody Requirements requirement) {
-        return accountsRepository.findById(accountsId)
-                .map(accounts -> {
-                    requirement.setAccounts(accounts);
-                    return requirementRepository.save(requirement);
-                }).orElseThrow(() -> new ResourceNotFoundException("Question not found with id " + accountsId, "accountid", requirement));
-    }
+	@CrossOrigin(origins = "*")
+	@GetMapping("/requirements")
+	@PreAuthorize("hasRole('ADMIN')")
+	public List<Requirements> getAccounts() {
+		return requirementRepository.findAll();
+	}
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+	@GetMapping("/accounts/{accountsId}/requitements")
+	public List<Requirements> getRquirementsByAccountsId(
+			@PathVariable Long accountsId) {
+		return requirementRepository.findByAccountsId(accountsId);
+	}
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+	@CrossOrigin(origins = "*")
+	@PostMapping("/accounts/{accountsId}/requitements")
+	public Requirements addRequirements(@PathVariable Long accountsId,
+			@Valid @RequestBody Requirements requirement) {
+		return accountsRepository
+				.findById(accountsId)
+				.map(accounts -> {
+					requirement.setAccounts(accounts);
+					return requirementRepository.save(requirement);
+				})
+				.orElseThrow(
+						() -> new ResourceNotFoundException(
+								"Question not found with id " + accountsId,
+								"accountid", requirement));
+	}
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+	@PutMapping("/accounts/{accountsId}/requitements/{reqId}")
+	public Requirements updateRequirements(@PathVariable Long accountsId,
+			@PathVariable Long reqId,
+			@Valid @RequestBody Requirements requirementRequest) {
+		if (!accountsRepository.existsById(accountsId)) {
+			throw new ResourceNotFoundException("Question not found with id "
+					+ accountsId, null, requirementRequest);
+		}
 
-    @PutMapping("/accounts/{accountsId}/requitements/{reqId}")
-    public Requirements updateRequirements(@PathVariable Long accountsId,
-                               @PathVariable Long reqId,
-                               @Valid @RequestBody Requirements requirementRequest) {
-        if(!accountsRepository.existsById(accountsId)) {
-            throw new ResourceNotFoundException("Question not found with id " + accountsId, null, requirementRequest);
-        }
+		return requirementRepository
+				.findById(reqId)
+				.map(requirements -> {
+					requirements.setDescription(requirementRequest
+							.getDescription());
+					return requirementRepository.save(requirements);
+				})
+				.orElseThrow(
+						() -> new ResourceNotFoundException(
+								"Answer not found with id " + reqId, null,
+								requirementRequest));
+	}
+    @PreAuthorize("hasRole('ADMIN')")
+	@DeleteMapping("/accounts/{accountsId}/requitements/{reqId}")
+	public ResponseEntity<?> deleteRequirement(@PathVariable Long accountsId,
+			@PathVariable Long reqId) {
+		if (!accountsRepository.existsById(accountsId)) {
+			throw new ResourceNotFoundException("Question not found with id "
+					+ accountsId, null, reqId);
+		}
 
-        return requirementRepository.findById(reqId)
-                .map(requirements -> {
-               	requirements.setDescription(requirementRequest.getDescription());
-                    return requirementRepository.save(requirements);
-                }).orElseThrow(() -> new ResourceNotFoundException("Answer not found with id " + reqId, null, requirementRequest));
-    }
+		return requirementRepository
+				.findById(reqId)
+				.map(requirements -> {
+					requirementRepository.delete(requirements);
+					return ResponseEntity.ok().build();
+				})
+				.orElseThrow(
+						() -> new ResourceNotFoundException(
+								"Answer not found with id " + reqId, null,
+								reqId));
 
-    @DeleteMapping("/accounts/{accountsId}/requitements/{reqId}")
-    public ResponseEntity<?> deleteRequirement(@PathVariable Long accountsId,
-                                          @PathVariable Long reqId) {
-        if(!accountsRepository.existsById(accountsId)) {
-            throw new ResourceNotFoundException("Question not found with id " + accountsId, null, reqId);
-        }
-
-        return requirementRepository.findById(reqId)
-                .map(requirements -> {
-                    requirementRepository.delete(requirements);
-                    return ResponseEntity.ok().build();
-                }).orElseThrow(() -> new ResourceNotFoundException("Answer not found with id " + reqId, null, reqId));
-
-    }
+	}
 }

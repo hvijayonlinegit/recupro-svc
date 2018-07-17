@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -55,6 +56,7 @@ public class DocumentController {
 
 	String message = "";
 
+	@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 	@PostMapping(value = "/upload")
 	public ResponseEntity<String> upload(
 			@RequestPart("file") MultipartFile[] multipartFiles,
@@ -69,6 +71,7 @@ public class DocumentController {
 
 	}
 
+	@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 	@GetMapping(value = "/download")
 	public ResponseEntity<?> download(@RequestParam String key,
 			@RequestParam("id") Long id) {
@@ -98,6 +101,7 @@ public class DocumentController {
 
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping(value = "/list")
 	public ResponseEntity<?> list() {
 		List<S3ObjectSummary> detailList = aws3ServiceImpl.list();
