@@ -41,11 +41,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
          "/swagger-ui.html",
          "/v2/api-docs",
          "/webjars/**"
+              
  };
  
-
-
-
 	@Bean
 	public JwtAuthenticationFilter jwtAuthenticationFilter() {
 		return new JwtAuthenticationFilter();

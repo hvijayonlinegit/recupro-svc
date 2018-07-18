@@ -79,6 +79,10 @@ public class Candidate extends AuditModel {
 	@JsonIgnoreProperties("candidates")
 	private List<Requirements> requirements = new ArrayList<Requirements>();
 
+	
+
+	
+
 	public Long getCandidateId() {
 		return candidateId;
 	}
@@ -86,6 +90,8 @@ public class Candidate extends AuditModel {
 	public void setCandidateId(Long candidateId) {
 		this.candidateId = candidateId;
 	}
+
+
 
 	public String getFirstname() {
 		return firstname;
