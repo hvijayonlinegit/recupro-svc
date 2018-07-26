@@ -27,14 +27,14 @@ public class CandidateController {
     @Autowired
     private CandidateRepository candidatesRepository;
     @CrossOrigin(origins = "*")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN','RECRUITMENT_LEAD')")
     @GetMapping("/requirements/{reqId}/candidates")
     public List<Candidate> getCandidatesByRequirementId(@PathVariable Long reqId) {
         return candidatesRepository.findByRequirementsId(reqId);
     }
     @CrossOrigin(origins = "*")
     @PostMapping("/requirements/{reqId}/candidates")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','RECRUITMENT_LEAD','BDM','TEAM','ACCOUNT_MANAGER','ROLE_USER')")
     public Candidate addCandidate(@PathVariable Long reqId,
                             @Valid @RequestBody Candidate candidatebody) {
     		//candidatesRepository.deleteAllInBatch();

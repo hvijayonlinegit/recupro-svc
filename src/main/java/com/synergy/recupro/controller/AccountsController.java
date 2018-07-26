@@ -24,21 +24,21 @@ public class AccountsController {
 
     @Autowired
     private AccountsRepository AccountsRepository;
-    
+
     @CrossOrigin(origins = "*")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('RECRUITMENT_LEAD', 'ROLE_ADMIN')")
     @GetMapping("/accounts")
     public List<Accounts> getAccounts() {
         return AccountsRepository.findAll();
     }
 
     @CrossOrigin(origins = "*")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','RECRUITMENT_LEAD','BDM','TEAM','ACCOUNT_MANAGER','ROLE_USER')")
     @PostMapping("/accounts")
     public Accounts createAccount(@Valid @RequestBody Accounts accounts) {
         return AccountsRepository.save(accounts);
     }
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','RECRUITMENT_LEAD','BDM','TEAM','ACCOUNT_MANAGER','ROLE_USER')")
     @PostMapping("/accounts/{accountId}")
     public Accounts updateAccount(@PathVariable Long accountId,
                                    @Valid @RequestBody Accounts accountsRequest) {
@@ -50,7 +50,7 @@ public class AccountsController {
                 }).orElseThrow(() -> new ResourceNotFoundException("Account not found with id " + accountId, null, accountsRequest));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/accounts/{accountId}")
     public ResponseEntity<?> deleteAccount(@PathVariable Long accountId) {
         return AccountsRepository.findById(accountId)

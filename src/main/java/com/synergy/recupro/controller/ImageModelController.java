@@ -20,7 +20,7 @@ public class ImageModelController {
    
     @CrossOrigin(origins = "*")
     @PostMapping("/imagemodel")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public @Valid ImageModel addDocument(
                             @Valid @RequestBody ImageModel imageModel) {
         return imageModelRepository.save(imageModel);
