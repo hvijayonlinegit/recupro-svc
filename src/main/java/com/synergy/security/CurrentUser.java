@@ -1,4 +1,4 @@
-package com.synergy.recupro.security;
+package com.synergy.security;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 

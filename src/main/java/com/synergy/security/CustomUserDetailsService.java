@@ -1,4 +1,4 @@
-package com.synergy.recupro.security;
+package com.synergy.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

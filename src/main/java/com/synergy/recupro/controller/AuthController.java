@@ -29,7 +29,7 @@ import com.synergy.recupro.payload.LoginRequest;
 import com.synergy.recupro.payload.SignUpRequest;
 import com.synergy.recupro.repository.RoleRepository;
 import com.synergy.recupro.repository.UserRepository;
-import com.synergy.recupro.security.JwtTokenProvider;
+import com.synergy.security.JwtTokenProvider;
 
 @RestController
 @RequestMapping("/api/auth")
