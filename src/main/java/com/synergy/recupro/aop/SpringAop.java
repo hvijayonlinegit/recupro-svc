@@ -28,17 +28,16 @@ public class SpringAop {
 	 */
 	@Around(value = "execution(* com.synergy.recupro..*.*(..))")
 	public Object aroundTest(ProceedingJoinPoint pjp) {
-		Object obj=new Object();
+		Object obj= new Object();
 		try {
 			logger.info("Before Method execution Class Name : "
 					+ pjp.getTarget().getClass().getName() + " Method Name : "
 					+ pjp.getSignature().getName());
-			obj=pjp.proceed();
+			 obj = pjp.proceed();
 			logger.info("After Method execution Class Name : "
 					+ pjp.getTarget().getClass().getName() + " Method Name : "
 					+ pjp.getSignature().getName());
-		} catch (Throwable e) {
-			obj=12;
+		} catch (Throwable e) {	
 			logger.info("After Throwable Method execution Class Name: "
 					+ pjp.getTarget().getClass().getName() + " Method Name : "
 					+ pjp.getSignature().getName());
