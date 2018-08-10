@@ -7,6 +7,8 @@ import java.net.URLEncoder;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpHeaders;
@@ -26,6 +28,7 @@ import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.synergy.recupro.aop.SpringAop;
 import com.synergy.recupro.config.AwsConfig;
 import com.synergy.recupro.exception.AppException;
 import com.synergy.recupro.model.Document;
@@ -38,6 +41,8 @@ import com.synergy.recupro.service.Aws3ServiceImpl;
  */
 @RestController
 public class DocumentController {
+	public static final Logger logger = LogManager
+			.getLogger(DocumentController.class);
 
 	@Autowired
 	private Aws3ServiceImpl aws3ServiceImpl;
@@ -64,7 +69,9 @@ public class DocumentController {
 		try {
 			aws3ServiceImpl.upload(multipartFiles, id);
 		} catch (Exception e) {
+			
 			throw new AppException("Error while uploading file");
+
 		}
 		message = "File successfully uploaded !";
 		return new ResponseEntity<String>(message, HttpStatus.OK);
@@ -96,6 +103,7 @@ public class DocumentController {
 			return new ResponseEntity<>(bytes, httpHeaders, HttpStatus.OK);
 
 		} catch (Exception e) {
+		
 			throw new AppException("Error while downloading file");
 		}
 
@@ -106,6 +114,7 @@ public class DocumentController {
 	public ResponseEntity<?> list() {
 		List<S3ObjectSummary> detailList = aws3ServiceImpl.list();
 		if (detailList.isEmpty()) {
+			
 			throw new AppException("List of Object is empty");
 		}
 		return new ResponseEntity<>(detailList, HttpStatus.OK);
