@@ -21,8 +21,8 @@ import com.synergy.recupro.payload.UserProfile;
 import com.synergy.recupro.payload.UserSummary;
 import com.synergy.recupro.repository.RoleRepository;
 import com.synergy.recupro.repository.UserRepository;
-import com.synergy.security.CurrentUser;
-import com.synergy.security.UserPrincipal;
+import com.synergy.recupro.security.CurrentUser;
+import com.synergy.recupro.security.UserPrincipal;
 
 @RestController
 public class UserController {

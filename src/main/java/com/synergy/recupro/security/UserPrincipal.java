@@ -1,4 +1,4 @@
-package com.synergy.security;
+package com.synergy.recupro.security;
 
 import java.util.Collection;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.synergy.security;
+package com.synergy.recupro.security;
 
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;

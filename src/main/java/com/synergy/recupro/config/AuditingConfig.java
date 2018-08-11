@@ -10,7 +10,9 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import com.synergy.security.UserPrincipal;
+import com.synergy.recupro.security.UserPrincipal;
+
+
 
 @Configuration
 @EnableJpaAuditing
