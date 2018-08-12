@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.synergy.recupro.model.Accounts;
 @CrossOrigin(origins = "*")  
-
+@PreAuthorize("hasAnyRole('RECRUITMENT_LEAD', 'ROLE_ADMIN')")
 @Repository
 public interface AccountsRepository extends JpaRepository<Accounts, Long> {
 }

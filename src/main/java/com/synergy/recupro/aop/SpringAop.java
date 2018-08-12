@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
 /**
@@ -19,7 +20,12 @@ import org.springframework.stereotype.Component;
 public class SpringAop {
 
 	public static final Logger logger = LogManager.getLogger(SpringAop.class);
-
+	
+     @Pointcut("execution(* org.springframework.data.rest.webmvc.RepositoryEntityController.*(..))")
+	  public void repository() { }
+	
+	@Pointcut("execution(* com.synergy.recupro..*.*(..)) ")
+	  public void core() { };
 	/**
 	 * AOP Around advice
 	 * 
@@ -27,8 +33,23 @@ public class SpringAop {
 	 * @return obj
 	 * @throws Throwable
 	 */
-	@Around(value = "execution(* com.synergy.recupro..*.*(..))")
+	@Around("core()")
 	public Object aroundTest(ProceedingJoinPoint pjp) throws Throwable {
+		Object obj = new Object();
+		logger.info("Before Method execution Class Name : "
+				+ pjp.getSignature().getDeclaringTypeName() + " Method Name : "
+				+ pjp.getSignature().getName());	
+		obj = pjp.proceed();
+		logger.info("After Method execution Class Name : "
+				+ pjp.getSignature().getDeclaringTypeName() + " Method Name : "
+				+ pjp.getSignature().getName());
+
+		return obj;
+
+	}
+	
+	@Around("repository()")
+	public Object aroundTestSec(ProceedingJoinPoint pjp) throws Throwable {
 		Object obj = new Object();
 		logger.info("Before Method execution Class Name : "
 				+ pjp.getSignature().getDeclaringTypeName() + " Method Name : "
