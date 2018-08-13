@@ -28,21 +28,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private JwtAuthenticationEntryPoint unauthorizedHandler;
-	
-	
-	 private static final String[] AUTH_WHITELIST = {
 
-         // -- swagger ui
-		 "/swagger-resources/configuration/security",
-		 "/swagger-resources/configuration/ui",
-         "/swagger-resources",
-         "/swagger-ui.html",
-         "/v2/api-docs",
-         "/webjars/**"
-              
- };
- 
-	
+	private static final String[] AUTH_WHITELIST = {
+
+			// -- swagger ui
+			"/swagger-resources/configuration/security",
+			"/swagger-resources/configuration/ui", "/swagger-resources",
+			"/swagger-ui.html", "/v2/api-docs", "/webjars/**"
+
+	};
+
 	@Override
 	public void configure(
 			AuthenticationManagerBuilder authenticationManagerBuilder)
@@ -61,6 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
+
 	@Bean
 	public JwtAuthenticationFilter jwtAuthenticationFilter() {
 		return new JwtAuthenticationFilter();
@@ -86,13 +82,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/api/auth/**")
 				.permitAll()
 				.antMatchers("/api/user/checkUsernameAvailability",
-						"/api/user/checkEmailAvailability")
-				.permitAll()
-				.antMatchers(HttpMethod.GET, "/synergy/api/**",
-						"/api/users/**", "/list","/download**").permitAll()
-				.antMatchers(HttpMethod.POST, "/upload")
-				.permitAll().antMatchers(AUTH_WHITELIST).permitAll().
-				anyRequest().authenticated();
+						"/api/user/checkEmailAvailability").permitAll()
+				.antMatchers(HttpMethod.GET, "/synergy/api/users/")
+				.hasAnyRole("ADMIN", "RECRUITMENT_LEAD")
+				.antMatchers(HttpMethod.POST, "/synergy/api/users/")
+				.hasAnyRole("ADMIN","RECRUITMENT_LEAD","BDM","TEAM","ACCOUNT_MANAGER","USER")
+				.antMatchers(HttpMethod.PUT, "/synergy/api/users/")
+				.hasAnyRole("ADMIN","RECRUITMENT_LEAD","BDM","TEAM","ACCOUNT_MANAGER","USER")
+				.antMatchers(HttpMethod.DELETE, "/synergy/api/users/**")
+				.hasRole("ADMIN")
+				/*
+				 * .antMatchers(HttpMethod.GET, "/synergy/api/**",
+				 * "/api/users/**", "/list","/download**").permitAll()
+				 */
+				.antMatchers(HttpMethod.POST, "/upload").permitAll()
+				.antMatchers(AUTH_WHITELIST).permitAll().anyRequest()
+				.authenticated();
 
 		// Add our custom JWT security filter
 		http.addFilterBefore(jwtAuthenticationFilter(),

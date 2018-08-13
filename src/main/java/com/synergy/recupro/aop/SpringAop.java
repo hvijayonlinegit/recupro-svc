@@ -20,12 +20,15 @@ import org.springframework.stereotype.Component;
 public class SpringAop {
 
 	public static final Logger logger = LogManager.getLogger(SpringAop.class);
-	
-     @Pointcut("execution(* org.springframework.data.rest.webmvc.RepositoryEntityController.*(..))")
-	  public void repository() { }
-	
+
+	@Pointcut("execution(* org.springframework.data.repository.Repository+.*(..))")
+	public void repository() {
+	}
+
 	@Pointcut("execution(* com.synergy.recupro..*.*(..)) ")
-	  public void core() { };
+	public void core() {
+	};
+
 	/**
 	 * AOP Around advice
 	 * 
@@ -38,7 +41,7 @@ public class SpringAop {
 		Object obj = new Object();
 		logger.info("Before Method execution Class Name : "
 				+ pjp.getSignature().getDeclaringTypeName() + " Method Name : "
-				+ pjp.getSignature().getName());	
+				+ pjp.getSignature().getName());
 		obj = pjp.proceed();
 		logger.info("After Method execution Class Name : "
 				+ pjp.getSignature().getDeclaringTypeName() + " Method Name : "
@@ -47,13 +50,13 @@ public class SpringAop {
 		return obj;
 
 	}
-	
+
 	@Around("repository()")
 	public Object aroundTestSec(ProceedingJoinPoint pjp) throws Throwable {
 		Object obj = new Object();
 		logger.info("Before Method execution Class Name : "
 				+ pjp.getSignature().getDeclaringTypeName() + " Method Name : "
-				+ pjp.getSignature().getName());	
+				+ pjp.getSignature().getName());
 		obj = pjp.proceed();
 		logger.info("After Method execution Class Name : "
 				+ pjp.getSignature().getDeclaringTypeName() + " Method Name : "

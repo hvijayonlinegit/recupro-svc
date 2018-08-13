@@ -32,17 +32,17 @@ public class RequirementController {
 
 	@CrossOrigin(origins = "*")
 	@GetMapping("/requirements")
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN','RECRUITMENT_LEAD')")
+	@PreAuthorize("hasAnyRole('ADMIN','RECRUITMENT_LEAD')")
 	public List<Requirements> getAccounts() {
 		return requirementRepository.findAll();
 	}
-    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN','RECRUITMENT_LEAD')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN','RECRUITMENT_LEAD')")
 	@GetMapping("/accounts/{accountsId}/requitements")
 	public List<Requirements> getRquirementsByAccountsId(
 			@PathVariable Long accountsId) {
 		return requirementRepository.findByAccountsId(accountsId);
 	}
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','RECRUITMENT_LEAD','BDM','TEAM','ACCOUNT_MANAGER','ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ADMIN','RECRUITMENT_LEAD','BDM','TEAM','ACCOUNT_MANAGER','USER')")
 	@CrossOrigin(origins = "*")
 	@PostMapping("/accounts/{accountsId}/requitements")
 	public Requirements addRequirements(@PathVariable Long accountsId,
@@ -58,7 +58,7 @@ public class RequirementController {
 								"Question not found with id " + accountsId,
 								"accountid", requirement));
 	}
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','RECRUITMENT_LEAD','BDM','TEAM','ACCOUNT_MANAGER','ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ADMIN','RECRUITMENT_LEAD','BDM','TEAM','ACCOUNT_MANAGER','USER')")
 	@PutMapping("/accounts/{accountsId}/requitements/{reqId}")
 	public Requirements updateRequirements(@PathVariable Long accountsId,
 			@PathVariable Long reqId,
@@ -80,7 +80,7 @@ public class RequirementController {
 								"Answer not found with id " + reqId, null,
 								requirementRequest));
 	}
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/accounts/{accountsId}/requitements/{reqId}")
 	public ResponseEntity<?> deleteRequirement(@PathVariable Long accountsId,
 			@PathVariable Long reqId) {

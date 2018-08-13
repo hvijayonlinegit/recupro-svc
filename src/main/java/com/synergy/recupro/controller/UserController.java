@@ -37,14 +37,12 @@ public class UserController {
 			.getLogger(UserController.class);
 
 	@GetMapping("/user/me")
-	//@PreAuthorize("hasAnyRole('USER', 'ADMIN','RECRUITMENT_LEAD')")
 	public UserSummary getCurrentUser(@CurrentUser UserPrincipal currentUser) {
 		UserSummary userSummary = new UserSummary(currentUser.getId(),
 				currentUser.getUsername(), currentUser.getName());
 		return userSummary;
 	}
 
-	//@PreAuthorize("hasAnyRole('USER', 'ADMIN','RECRUITMENT_LEAD')")
 	@GetMapping("/user/checkUsernameAvailability")
 	public UserIdentityAvailability checkUsernameAvailability(
 			@RequestParam(value = "username") String username) {
@@ -52,7 +50,6 @@ public class UserController {
 		return new UserIdentityAvailability(isAvailable);
 	}
 
-	//@PreAuthorize("hasAnyRole('USER', 'ADMIN','RECRUITMENT_LEAD')")
 	@GetMapping("/user/checkEmailAvailability")
 	public UserIdentityAvailability checkEmailAvailability(
 			@RequestParam(value = "email") String email) {

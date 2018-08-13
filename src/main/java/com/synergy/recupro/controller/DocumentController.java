@@ -61,7 +61,7 @@ public class DocumentController {
 
 	String message = "";
 
-	@PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+	@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 	@PostMapping(value = "/upload")
 	public ResponseEntity<String> upload(
 			@RequestPart("file") MultipartFile[] multipartFiles,
@@ -78,7 +78,7 @@ public class DocumentController {
 
 	}
 
-	@PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+	@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 	@GetMapping(value = "/download")
 	public ResponseEntity<?> download(@RequestParam String key,
 			@RequestParam("id") Long id) {
@@ -109,7 +109,7 @@ public class DocumentController {
 
 	}
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping(value = "/list")
 	public ResponseEntity<?> list() {
 		List<S3ObjectSummary> detailList = aws3ServiceImpl.list();
