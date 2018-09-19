@@ -12,6 +12,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.synergy.recupro.security.UserPrincipal;
 
+
+
 @Configuration
 @EnableJpaAuditing
 public class AuditingConfig {

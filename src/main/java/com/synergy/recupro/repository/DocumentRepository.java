@@ -5,45 +5,48 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
-import com.synergy.recupro.model.Candidate;
+import com.synergy.recupro.model.Document;
 
+/**
+ * A JPA repository used to perform crud operations on file meta data records in
+ * database
+ */
 @CrossOrigin(origins = "*")
 @PreAuthorize("hasAnyRole('ADMIN','RECRUITMENT_LEAD','BDM','TEAM','ACCOUNT_MANAGER','USER')")
 @Repository
-public interface CandidateRepository extends JpaRepository<Candidate, Long> {
+public interface DocumentRepository extends JpaRepository<Document, Long> {
+	@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+	@Query(value = "select * from Documents where candidateId = ?1 and documentName= ?2", nativeQuery = true)
+	Document findBydocumentType(Long Id, String docName);
 
-	@PreAuthorize("hasAnyRole('USER', 'ADMIN','RECRUITMENT_LEAD')")
-	List<Candidate> findByRequirementsId(Long req_id);
-
-	Candidate findByCandidateId(Long id);
-
-	@PreAuthorize("hasAnyRole('RECRUITMENT_LEAD', 'ADMIN')")
+	@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 	@Override
-	public List<Candidate> findAll();
+	public List<Document> findAll();
 
-	@PreAuthorize("hasAnyRole('USER', 'ADMIN','RECRUITMENT_LEAD')")
+	@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 	@Override
-	public Optional<Candidate> findById(Long id);
+	public Optional<Document> findById(Long id);
 
-	@PreAuthorize("hasAnyRole('USER', 'ADMIN','RECRUITMENT_LEAD')")
+	@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 	@Override
-	public <S extends Candidate> List<S> findAll(Example<S> example);
+	public <S extends Document> List<S> findAll(Example<S> example);
 
 	@PreAuthorize("hasAnyRole('ADMIN','RECRUITMENT_LEAD','BDM','TEAM','ACCOUNT_MANAGER','USER')")
 	@Override
-	public <S extends Candidate> S save(S entity);
+	public <S extends Document> S save(S entity);
 
 	@PreAuthorize("hasAnyRole('ADMIN','RECRUITMENT_LEAD','BDM','TEAM','ACCOUNT_MANAGER','USER')")
 	@Override
-	public <S extends Candidate> List<S> saveAll(Iterable<S> entities);
+	public <S extends Document> List<S> saveAll(Iterable<S> entities);
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@Override
-	public void delete(Candidate entity);
+	public void delete(Document entity);
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@Override
@@ -52,4 +55,5 @@ public interface CandidateRepository extends JpaRepository<Candidate, Long> {
 	@PreAuthorize("hasRole('ADMIN')")
 	@Override
 	public void deleteById(Long id);
+
 }
