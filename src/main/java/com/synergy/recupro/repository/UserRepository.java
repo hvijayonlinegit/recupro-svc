@@ -50,11 +50,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	@Override
 	public <S extends User> List<S> findAll(Example<S> example);
 
-	@PreAuthorize("hasAnyRole('ADMIN','RECRUITMENT_LEAD','BDM','TEAM','ACCOUNT_MANAGER','USER')")
+	//@PreAuthorize("hasAnyRole('ADMIN','RECRUITMENT_LEAD','BDM','TEAM','ACCOUNT_MANAGER','USER')")
 	@Override
 	public <S extends User> S save(S entity);
 
-	@PreAuthorize("hasAnyRole('ADMIN','RECRUITMENT_LEAD','BDM','TEAM','ACCOUNT_MANAGER','USER')")
+	//@PreAuthorize("hasAnyRole('ADMIN','RECRUITMENT_LEAD','BDM','TEAM','ACCOUNT_MANAGER','USER')")
 	@Override
 	public <S extends User> List<S> saveAll(Iterable<S> entities);
 

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import com.synergy.recupro.model.Role;
 import com.synergy.recupro.model.RoleName;
 @CrossOrigin(origins = "*")  
-@PreAuthorize("hasRole('ADMIN')")
+//@PreAuthorize("hasRole('ADMIN')")
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
 	

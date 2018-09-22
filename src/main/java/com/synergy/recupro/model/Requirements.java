@@ -16,6 +16,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -56,7 +57,9 @@ public class Requirements extends AuditModel {
     private String recruiter_name;
     @Column(columnDefinition = "text")
     private String account_manager;
-    @ManyToOne(fetch = FetchType.LAZY)
+    //Added JsonBack reference to add the referemce of requirement to account repo via spring data rest api call
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "account_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore

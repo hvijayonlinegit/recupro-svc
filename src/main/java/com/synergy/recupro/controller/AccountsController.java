@@ -35,13 +35,13 @@ public class AccountsController {
     public List<Accounts> getAccounts() {
         return AccountsRepository.findAll();
     }
-
-    @CrossOrigin(origins = "*")
-    @PreAuthorize("hasAnyRole('ADMIN','RECRUITMENT_LEAD','BDM','TEAM','ACCOUNT_MANAGER','USER')")
-    @PostMapping("/accounts")
-    public Accounts createAccount(@Valid @RequestBody Accounts accounts) {
-        return AccountsRepository.save(accounts);
-    }
+// Commented these line to test the Spring data rest Create account instead of legacy call.
+//    @CrossOrigin(origins = "*")
+//    @PreAuthorize("hasAnyRole('ADMIN','RECRUITMENT_LEAD','BDM','TEAM','ACCOUNT_MANAGER','USER')")
+//    @PostMapping("/accounts")
+//    public Accounts createAccount(@Valid @RequestBody Accounts accounts) {
+//        return AccountsRepository.save(accounts);
+//    }
     @PreAuthorize("hasAnyRole('ADMIN','RECRUITMENT_LEAD','BDM','TEAM','ACCOUNT_MANAGER','USER')")
     @PostMapping("/accounts/{accountId}")
     public Accounts updateAccount(@PathVariable Long accountId,

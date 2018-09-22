@@ -2,6 +2,7 @@ package com.synergy.recupro.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,6 +12,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 
 @Entity
@@ -39,8 +41,10 @@ public class Accounts extends AuditModel {
     private String phone;
     @Column(columnDefinition = "text")
     private String team;
-    
-    @OneToMany(mappedBy="accounts")
+    // added JsonMangedReference to add the client and requirement association via Spring data rest call
+    // ref : https://stackoverflow.com/questions/29876978/spring-data-rest-one-to-many-cascade-all
+    @JsonManagedReference
+    @OneToMany(cascade = {CascadeType.ALL,CascadeType.PERSIST,CascadeType.MERGE}, mappedBy="accounts")
     @JsonIgnoreProperties("accounts")
     private List<Requirements> requirements;
 

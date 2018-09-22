@@ -5,14 +5,15 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.synergy.recupro.model.Requirements;
 @CrossOrigin(origins = "*") 
 @PreAuthorize("hasAnyRole('ADMIN','RECRUITMENT_LEAD','BDM','TEAM','ACCOUNT_MANAGER','USER')")
-@Repository
+//Modified from @Repository to @RepositoryRestResource the annotation to add the one to many requirement association
+@RepositoryRestResource
 public interface RequirementRepository extends JpaRepository<Requirements, Long> {
 	 @PreAuthorize("hasAnyRole('USER', 'ADMIN','RECRUITMENT_LEAD')")
 	List<Requirements> findByAccountsId(Long account_id);
@@ -28,10 +29,10 @@ public interface RequirementRepository extends JpaRepository<Requirements, Long>
 	@PreAuthorize("hasAnyRole('ADMIN','RECRUITMENT_LEAD')")
 	@Override
 	public <S extends Requirements> List<S> findAll(Example<S> example);
-
-	@PreAuthorize("hasAnyRole('ADMIN','RECRUITMENT_LEAD','BDM','TEAM','ACCOUNT_MANAGER','USER')")
-	@Override
-	public <S extends Requirements> S save(S entity);
+// Commented for now to test via spring data rest calls
+//	@PreAuthorize("hasAnyRole('ADMIN','RECRUITMENT_LEAD','BDM','TEAM','ACCOUNT_MANAGER','USER')")
+//	@Override
+//	public <S extends Requirements> S save(S entity);
 
 	@PreAuthorize("hasAnyRole('ADMIN','RECRUITMENT_LEAD','BDM','TEAM','ACCOUNT_MANAGER','USER')")
 	@Override

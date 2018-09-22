@@ -31,8 +31,8 @@ public class MailHelper {
 	        .append("Email			:"+user.getEmail()).append("\n")
 	        .append("User Name		:"+user.getUsername()).append("\n")
 	        .append("Created At		:"+user.getCreatedAt()).append("\n");
-	        
-	        helper.setTo("sivarama.ece@gmail.com");
+	        //Need to work on reading this email via config file instead of hard coded
+	        helper.setTo("hvijayonline@gmail.com");
 	        helper.setText(mailBody.toString());
 	        helper.setSubject(SUBJECT);
 	        
