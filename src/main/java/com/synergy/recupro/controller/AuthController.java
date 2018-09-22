@@ -2,12 +2,16 @@ package com.synergy.recupro.controller;
 
 import java.net.URI;
 import java.util.Collections;
+import java.util.Objects;
 
+import javax.mail.internet.MimeMessage;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.synergy.recupro.exception.AppException;
+import com.synergy.recupro.helper.MailHelper;
 import com.synergy.recupro.model.Role;
 import com.synergy.recupro.model.RoleName;
 import com.synergy.recupro.model.User;
@@ -49,7 +54,10 @@ public class AuthController {
 
     @Autowired
     JwtTokenProvider tokenProvider;
-
+    
+    @Autowired
+    MailHelper mailHelper;
+    
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
@@ -84,17 +92,53 @@ public class AuthController {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
-                .orElseThrow(() -> new AppException("User Role not set."));
-
-        user.setRoles(Collections.singleton(userRole));
+//        Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
+//                .orElseThrow(() -> new AppException("User Role not set."));
+//
+//        user.setRoles(Collections.singleton(userRole));
 
         User result = userRepository.save(user);
-
+        if(!Objects.isNull(result))
+        {
+        	 try 
+             {
+        			mailHelper.sendEmail(user);
+             }
+             catch(Exception ex) 
+             {
+            	 System.err.println("srini exception"+ex);
+            	 //TODO: Have to log error going forward
+//            	 return new ResponseEntity(new ApiResponse(false, "Email Address already in use!"),
+//                         HttpStatus.BAD_REQUEST);
+             }
+        }
+        
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/users/{username}")
                 .buildAndExpand(result.getUsername()).toUri();
-
+        
         return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
     }
+    
+//    public void sendEmail(User user) throws Exception{
+//
+//    	MimeMessage message = sender.createMimeMessage();
+//        MimeMessageHelper helper = new MimeMessageHelper(message);
+//        
+//        final String  SUBJECT = "new user to recupro";
+//        
+//        StringBuilder mailBody = new StringBuilder(1000);
+//        
+//         mailBody.append("hello team").append("\n").append("A new user has been registered to recupro.").append("\n").append("Please find details below:").append("\n")
+//        .append("Name			:"+user.getName()).append("\n")
+//        .append("Email			:"+user.getEmail()).append("\n")
+//        .append("User Name		:"+user.getUsername()).append("\n")
+//        .append("Created At		:"+user.getCreatedAt()).append("\n");
+//        
+//        helper.setTo("sivarama.ece@gmail.com");
+//        helper.setText(mailBody.toString());
+//        helper.setSubject(SUBJECT);
+//        
+//        sender.send(message);
+//    }
 }
