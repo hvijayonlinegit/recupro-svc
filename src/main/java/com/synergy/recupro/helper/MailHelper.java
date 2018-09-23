@@ -38,7 +38,7 @@ public class MailHelper {
 	        .append("Created At				:"+user.getCreatedAt()).append("\n")
 	        .append("record Created in 		:"+environmentHelper.getEnvironmentForLocation(location));
 	
-	        helper.setTo(environmentHelper.getPropertyFromPropertiesFile("customm.mail.to-address"));
+	        helper.setTo(environmentHelper.getPropertyFromPropertiesFile("custom.mail.to-address"));
 	        helper.setText(mailBody.toString());
 	        helper.setSubject(SUBJECT);
 	        
