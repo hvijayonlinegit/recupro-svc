@@ -58,6 +58,8 @@ public class AuthController {
     @Autowired
     MailHelper mailHelper;
     
+    
+    
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
@@ -98,24 +100,23 @@ public class AuthController {
         user.setRoles(Collections.singleton(userRole));
         
         User result = userRepository.save(user);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentContextPath().path("/users/{username}")
+                .buildAndExpand(result.getUsername()).toUri();
+        
         if(!Objects.isNull(result))
         {
         	 try 
              {
-        			mailHelper.sendEmail(user);
+        		 mailHelper.sendEmail(user,location.toString());
              }
              catch(Exception ex) 
              {
-            	 System.err.println("srini exception"+ex);
+            	 System.err.println("exception in sending mail   :"+ex);
             	 //TODO: Have to log error going forward
-//            	 return new ResponseEntity(new ApiResponse(false, "Email Address already in use!"),
-//                         HttpStatus.BAD_REQUEST);
              }
         }
-        
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentContextPath().path("/users/{username}")
-                .buildAndExpand(result.getUsername()).toUri();
         
         return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
     }
